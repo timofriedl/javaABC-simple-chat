@@ -19,6 +19,7 @@ public class ChatServer {
             System.out.println("Started chat server on port " + port);
 
             while (true) {
+                System.out.println("Waiting for new client...");
                 Socket connectionToClient = serverSocket.accept();
                 ClientHandler client = new ClientHandler(this, connectionToClient);
                 clients.add(client);
@@ -36,8 +37,10 @@ public class ChatServer {
 
     public void broadcastMessage(String message) {
         System.out.println(message);
-        for (ClientHandler client : clients) {
-            client.sendMessage(message);
+        if (message != null) {
+            for (ClientHandler client : clients) {
+                client.sendMessage(message);
+            }
         }
     }
 
