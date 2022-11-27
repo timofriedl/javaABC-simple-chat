@@ -27,18 +27,20 @@ public class ClientHandler implements Runnable {
             fromClientReader = new BufferedReader(new InputStreamReader(connectionToClient.getInputStream()));
             toClientWriter = new PrintWriter(new OutputStreamWriter(connectionToClient.getOutputStream()));
 
+            chatServer.broadcastMessage(name + " connected.");
             while (true) {
                 String message = fromClientReader.readLine();
                 chatServer.broadcastMessage(name + ": " + message);
             }
         } catch (IOException e) {
             chatServer.removeClient(this);
+            chatServer.broadcastMessage(name + " disconnected.");
         } finally {
             if (fromClientReader != null) {
                 try {
                     fromClientReader.close();
                 } catch (IOException e) {
-                    // Ignore
+                    e.printStackTrace();
                 }
             }
             if (toClientWriter != null) {

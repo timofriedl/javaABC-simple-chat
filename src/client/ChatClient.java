@@ -11,6 +11,7 @@ public class ChatClient extends JFrame implements KeyListener {
     private int port;
     private String address;
 
+    // Connection
     private Socket connectionToServer;
     private BufferedReader fromServerReader;
     private PrintWriter toServerWriter;
@@ -25,11 +26,10 @@ public class ChatClient extends JFrame implements KeyListener {
         this.port = port;
 
         address = JOptionPane.showInputDialog("IP-Adresse");
-        if (address == null) {
-            return;
-        }
 
-        receiveMessages();
+        if (address != null) {
+            receiveMessages();
+        }
     }
 
     private void initGui() {
@@ -57,28 +57,30 @@ public class ChatClient extends JFrame implements KeyListener {
             connectionToServer = new Socket(address, port);
             fromServerReader = new BufferedReader(new InputStreamReader(connectionToServer.getInputStream()));
             toServerWriter = new PrintWriter(new OutputStreamWriter(connectionToServer.getOutputStream()));
+
             initGui();
 
             while (true) {
                 String message = fromServerReader.readLine();
-                outputTextArea.setText(outputTextArea.getText() + message + "\n");
+                outputTextArea.append(message + "\n");
                 outputScrollPane.getVerticalScrollBar().setValue(outputScrollPane.getVerticalScrollBar().getMaximum());
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Verbindung zum Server \"" + address + "\" fehlgeschlagen.");
+            dispose();
         } finally {
             if (connectionToServer != null) {
                 try {
                     connectionToServer.close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
             if (fromServerReader != null) {
                 try {
                     fromServerReader.close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
             if (toServerWriter != null) {

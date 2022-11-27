@@ -8,7 +8,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ChatServer {
     private ServerSocket serverSocket;
-
     private List<ClientHandler> clients;
 
     public ChatServer(int port) {
@@ -26,13 +25,20 @@ public class ChatServer {
                 System.out.println("Accepted new client");
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        } finally {
+            if (serverSocket != null) {
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     public void removeClient(ClientHandler client) {
         clients.remove(client);
-        System.out.println("Client disconnected");
     }
 
     public void broadcastMessage(String message) {
