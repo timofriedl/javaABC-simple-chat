@@ -8,8 +8,8 @@ import java.io.*;
 import java.net.Socket;
 
 public class ChatClient extends JFrame implements KeyListener {
-    private int port;
     private String address;
+    private int port;
 
     // Connection
     private Socket connectionToServer;
@@ -46,10 +46,10 @@ public class ChatClient extends JFrame implements KeyListener {
         add(outputScrollPane, BorderLayout.CENTER);
         add(inputTextField, BorderLayout.SOUTH);
 
-        setSize(400, 300);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
         setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(400, 300);
+        setLocationRelativeTo(null);
     }
 
     private void receiveMessages() {

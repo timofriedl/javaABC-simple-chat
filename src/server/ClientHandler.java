@@ -28,14 +28,18 @@ public class ClientHandler implements Runnable {
             toClientWriter = new PrintWriter(new OutputStreamWriter(connectionToClient.getOutputStream()));
 
             chatServer.broadcastMessage(name + " connected.");
-            while (true) {
-                String message = fromClientReader.readLine();
+
+            String message = fromClientReader.readLine();
+            while (message != null) {
                 chatServer.broadcastMessage(name + ": " + message);
+                message = fromClientReader.readLine();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             chatServer.removeClient(this);
             chatServer.broadcastMessage(name + " disconnected.");
-        } finally {
+
             if (fromClientReader != null) {
                 try {
                     fromClientReader.close();
@@ -47,7 +51,6 @@ public class ClientHandler implements Runnable {
                 toClientWriter.close();
             }
         }
-
     }
 
     public void sendMessage(String message) {
